@@ -1,5 +1,3 @@
-'use client';
-
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -41,7 +39,20 @@ const mockThesis = {
   coSupervisor: 'Dr. Sarah Williams',
 };
 
-export default function ThesisDetailsPage({ params }: { params: { id: string } }) {
+// Mock data for generating static params
+const mockTheses = [
+  { id: '1' },
+  { id: '2' },
+  { id: '3' },
+];
+
+export async function generateStaticParams() {
+  return mockTheses.map((thesis) => ({
+    id: thesis.id,
+  }));
+}
+
+export default function ThesisDetailsPage() {
   const thesis = mockThesis; // In a real app, fetch thesis by params.id
 
   return (

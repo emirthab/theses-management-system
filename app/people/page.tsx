@@ -4,7 +4,7 @@ import { getAuthors, getSupervisors } from "./actions";
 // For disable cache behavior
 export const revalidate = 0
 
-export const getData = async () => {
+const getData = async () => {
   return {
     authors: await getAuthors(),
     supervisors: await getSupervisors()

@@ -3,7 +3,7 @@ import { getUniversities } from '@/app/university/actions';
 import SubmitThesisView from '../_views/submit-thesis-view';
 import { getTopics } from '../actions';
 
-export async function getData() {
+async function getData() {
   return {
     authors: await getAuthors(),
     supervisors: await getSupervisors(),
