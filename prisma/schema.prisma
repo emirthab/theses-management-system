@@ -1,0 +1,133 @@
+// Prisma schema for PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Thesis {
+  thesis_no       Int           @id @map("thesis_no") @db.Integer
+  title           String        @db.VarChar(500)
+  abstract        String        @db.Text
+  author_id       Int
+  year            Int           @db.Integer
+  type            ThesisType
+  university_id   Int
+  institute_id    Int
+  language        Language
+  submission_date DateTime      @db.Date
+
+  author          Author        @relation(fields: [author_id], references: [author_id])
+  university      University    @relation(fields: [university_id], references: [university_id])
+  institute       Institute     @relation(fields: [institute_id], references: [institute_id])
+  supervisors     ThesisSupervisor[]
+  coSupervisors   ThesisCoSupervisor[]
+  topics          ThesisTopic[]
+  keywords        ThesisKeyword[]
+}
+
+model Author {
+  author_id   Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  email       String?  @db.VarChar(255)
+  other_info  String?  @db.Text
+
+  theses      Thesis[]
+}
+
+model Supervisor {
+  supervisor_id Int      @id @default(autoincrement())
+  name          String   @db.VarChar(255)
+  email         String  @db.VarChar(255)
+  other_info    String?  @db.Text
+
+  thesisSupervisors ThesisSupervisor[]
+  thesisCoSupervisors ThesisCoSupervisor[]
+}
+
+model University {
+  university_id Int       @id @default(autoincrement())
+  name          String    @db.VarChar(255)
+  location      String?   @db.VarChar(255)
+
+  theses        Thesis[]
+  institutes    Institute[]
+}
+
+model Institute {
+  institute_id  Int       @id @default(autoincrement())
+  name          String    @db.VarChar(255)
+  university_id Int
+
+  university    University @relation(fields: [university_id], references: [university_id])
+  theses        Thesis[]
+}
+
+model SubjectTopic {
+  name        String  @id @db.VarChar(255)
+
+  thesisTopics ThesisTopic[]
+}
+
+model Keyword {
+  name        String  @id @db.VarChar(255)
+
+  thesisKeywords ThesisKeyword[]
+}
+
+model ThesisSupervisor {
+  thesis_no      Int
+  supervisor_id  Int
+
+  thesis          Thesis       @relation(fields: [thesis_no], references: [thesis_no])
+  supervisor      Supervisor   @relation(fields: [supervisor_id], references: [supervisor_id])
+
+  @@id([thesis_no, supervisor_id])
+}
+
+model ThesisCoSupervisor {
+  thesis_no        Int
+  supervisor_id    Int
+
+  thesis           Thesis        @relation(fields: [thesis_no], references: [thesis_no])
+  supervisor       Supervisor    @relation(fields: [supervisor_id], references: [supervisor_id])
+
+  @@id([thesis_no, supervisor_id])
+}
+
+model ThesisTopic {
+  thesis_no   Int
+  topic_name  String
+
+  thesis      Thesis        @relation(fields: [thesis_no], references: [thesis_no])
+  topic       SubjectTopic  @relation(fields: [topic_name], references: [name])
+
+  @@id([thesis_no, topic_name])
+}
+
+model ThesisKeyword {
+  thesis_no   Int
+  keyword_name String
+
+  thesis      Thesis      @relation(fields: [thesis_no], references: [thesis_no])
+  keyword     Keyword     @relation(fields: [keyword_name], references: [name])
+
+  @@id([thesis_no, keyword_name])
+}
+
+enum ThesisType {
+  Master
+  Doctorate
+  Specialization
+  ProficiencyInArt
+}
+
+enum Language {
+  Turkish
+  English
+  French
+}
