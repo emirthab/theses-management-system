@@ -49,29 +49,37 @@ const SearchResultList = ({ theses }: {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {theses.map((thesis) => (
-          <TableRow key={thesis.thesis_no}>
-            <TableCell className="font-medium w-60">{thesis.title}</TableCell>
-            <TableCell>{thesis.author.name}</TableCell>
-            <TableCell>{thesis.type}</TableCell>
-            <TableCell>{thesis.university.name}</TableCell>
-            <TableCell className="text-right">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm">
-                    View Details
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Thesis Details</DialogTitle>
-                  </DialogHeader>
-                  <ThesisDetail thesis={thesis} />
-                </DialogContent>
-              </Dialog>
+        {theses.length > 0 ? (
+          theses.map((thesis) => (
+            <TableRow key={thesis.thesis_no}>
+              <TableCell className="font-medium w-60">{thesis.title}</TableCell>
+              <TableCell>{thesis.author.name}</TableCell>
+              <TableCell>{thesis.type}</TableCell>
+              <TableCell>{thesis.university.name}</TableCell>
+              <TableCell className="text-right">
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      View Details
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Thesis Details</DialogTitle>
+                    </DialogHeader>
+                    <ThesisDetail thesis={thesis} />
+                  </DialogContent>
+                </Dialog>
+              </TableCell>
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={5} className="text-center">
+              No data found
             </TableCell>
           </TableRow>
-        ))}
+        )}
       </TableBody>
     </Table>
   );
