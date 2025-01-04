@@ -24,7 +24,7 @@ const features = [
   {
     name: 'Manage University',
     description: 'Organize universities and their associated institutes',
-    href: '/institutions',
+    href: '/university',
     icon: Building2,
   },
 ];
