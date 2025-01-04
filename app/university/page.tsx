@@ -1,4 +1,6 @@
+import { Suspense } from "react";
 import InstitutionsView from "./_views/institutions";
+import PageLoading from "./_views/page-loading";
 import UniversitiesView from "./_views/universities";
 import { getInstitutes, getUniversities } from "./actions";
 
@@ -13,6 +15,14 @@ const getData = async () => {
 }
 
 export default async function UniversityPage() {
+  return (
+    <Suspense fallback={<PageLoading />}>
+      <PageContent />
+    </Suspense>
+  )
+}
+
+export async function PageContent() {
   const { universities, institutes } = await getData();
 
   return (

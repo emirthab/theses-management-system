@@ -1,11 +1,10 @@
 'use server';
 
 import { ActionResponse } from '@/lib/types';
-import { Prisma, PrismaClient } from '@prisma/client'
+import { Prisma } from '@prisma/client'
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 const peopleSchema = z.object({
   name: z.string().nonempty().min(1),

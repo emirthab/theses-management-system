@@ -10,16 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import DialogFormWrapper from '@/components/dialog-form-wrapper';
 import AuthorForm from './author-form';

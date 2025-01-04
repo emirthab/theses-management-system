@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import PeoplePageLoading from "./_views/page-loading";
 import PeopleView from "./_views/people-view";
 import { getAuthors, getSupervisors } from "./actions";
 
@@ -11,7 +13,15 @@ const getData = async () => {
   }
 }
 
-export default async function InstitutionsPage() {
+export default async function PeoplePage() {
+  return (
+    <Suspense fallback={<PeoplePageLoading />}>
+      <PageContent />
+    </Suspense>
+  )
+}
+
+export async function PageContent() {
   const { authors, supervisors } = await getData();
 
   return (

@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  env:{
-    DATABASE_URL: "postgresql://postgres:RswOYGzrtYEdkGiuvlgOJKWGxcvQaUFe@monorail.proxy.rlwy.net:36370/railway",
-  },
   output: 'standalone',
   eslint: {
     ignoreDuringBuilds: true,
@@ -11,7 +8,7 @@ const nextConfig = {
   experimental: {
     serverActions: true,
   },
-  typescript:{
+  typescript: {
     ignoreBuildErrors: true
   }
 };

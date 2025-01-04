@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { BookOpenText, Users, Building2, Search, FileText, LetterText, Home } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const navigation = [
   { name: 'Home', href: '/', icon: Home },
@@ -17,12 +18,13 @@ const navigation = [
 
 export function Navigation() {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
     <nav className="border-b">
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
+          <div onClick={() => router.replace("/")} className="flex items-center cursor-pointer">
             <BookOpenText className="h-8 w-8 text-primary" />
             <span className="ml-2 text-xl font-semibold">GTS</span>
           </div>

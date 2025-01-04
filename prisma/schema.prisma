@@ -14,7 +14,6 @@ model Thesis {
   title           String        @db.VarChar(500)
   abstract        String        @db.Text
   author_id       Int
-  year            Int           @db.Integer
   type            ThesisType
   university_id   Int
   institute_id    Int
@@ -26,7 +25,6 @@ model Thesis {
   institute       Institute     @relation(fields: [institute_id], references: [institute_id])
   supervisors     ThesisSupervisor[]
   coSupervisors   ThesisCoSupervisor[]
-  topics          ThesisTopic[]
   keywords        ThesisKeyword[]
 }
 
@@ -67,12 +65,6 @@ model Institute {
   theses        Thesis[]
 }
 
-model SubjectTopic {
-  name        String  @id @db.VarChar(255)
-
-  thesisTopics ThesisTopic[]
-}
-
 model Keyword {
   name        String  @id @db.VarChar(255)
 
@@ -97,16 +89,6 @@ model ThesisCoSupervisor {
   supervisor       Supervisor    @relation(fields: [supervisor_id], references: [supervisor_id])
 
   @@id([thesis_no, supervisor_id])
-}
-
-model ThesisTopic {
-  thesis_no   Int
-  topic_name  String
-
-  thesis      Thesis        @relation(fields: [thesis_no], references: [thesis_no])
-  topic       SubjectTopic  @relation(fields: [topic_name], references: [name])
-
-  @@id([thesis_no, topic_name])
 }
 
 model ThesisKeyword {

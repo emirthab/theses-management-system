@@ -60,43 +60,51 @@ const UniversitiesView = ({ universities }: { universities: University[] }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {universities.map((university) => (
-              <TableRow key={university.university_id}>
-                <TableCell>{university.name}</TableCell>
-                <TableCell>{university.location}</TableCell>
-                <TableCell className="text-right space-x-2">
-                  <DialogFormWrapper
-                    initialState={{
-                      success: false,
-                      message: '',
-                      inputs: {
-                        id: university.university_id,
-                        name: university.name,
-                        location: university.location,
-                      }
-                    }}
-                    title='Edit University'
-                    description='Enter the details of the new university.'
-                    buttonText='Save University'
-                    action={updateUniversity}
-                    renderTrigger={
+            {universities.length > 0 ? (
+              universities.map((university) => (
+                <TableRow key={university.university_id}>
+                  <TableCell>{university.name}</TableCell>
+                  <TableCell>{university.location}</TableCell>
+                  <TableCell className="text-right space-x-2">
+                    <DialogFormWrapper
+                      initialState={{
+                        success: false,
+                        message: '',
+                        inputs: {
+                          id: university.university_id,
+                          name: university.name,
+                          location: university.location,
+                        }
+                      }}
+                      title='Edit University'
+                      description='Enter the details of the new university.'
+                      buttonText='Save University'
+                      action={updateUniversity}
+                      renderTrigger={
+                        <Button variant="ghost" size="sm">
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      }>
+                      <UniversityForm />
+                    </DialogFormWrapper>
+                    <DeleteAlert
+                      title='Delete University'
+                      itemName={university.name}
+                      action={() => deleteUniversity(university.university_id)}>
                       <Button variant="ghost" size="sm">
-                        <Pencil className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
-                    }>
-                    <UniversityForm />
-                  </DialogFormWrapper>
-                  <DeleteAlert
-                    title='Delete University'
-                    itemName={university.name}
-                    action={() => deleteUniversity(university.university_id)}>
-                    <Button variant="ghost" size="sm">
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </DeleteAlert>
+                    </DeleteAlert>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={3} className="text-center">
+                  No data found
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </CardContent>

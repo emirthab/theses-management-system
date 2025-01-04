@@ -10,14 +10,16 @@ import { useEffect, useState } from 'react';
 import { getInstitutesFromUniversity } from '@/app/university/actions';
 import { useResetableActionState } from '@/hooks/use-resetable-action-state';
 import { ActionResponse } from '@/lib/types';
-import { Prisma, SubjectTopic, ThesisType, University } from '@prisma/client';
+import { Language, Prisma, ThesisType, University } from '@prisma/client';
 import { addThesis } from '../actions';
+import { useToast } from '@/hooks/use-toast';
+import { LoadingSpinner } from '@/components/ui/loading-spinner';
 
 const SubmitThesisView = ({
   authors,
   supervisors,
   universities,
-  topics,
+  keywords,
 }: {
   authors: Prisma.AuthorGetPayload<{
     include: {
@@ -34,7 +36,7 @@ const SubmitThesisView = ({
     }
   }>[],
   universities: University[],
-  topics: string[],
+  keywords: string[],
 
 }) => {
   const initialState = {
@@ -52,9 +54,14 @@ const SubmitThesisView = ({
 
   const [state, formAction, isPending, reset] = useResetableActionState(addThesis, initialState);
 
+  const { toast } = useToast();
+
   useEffect(() => {
     if (state.success) {
       reset()
+      toast({
+        title: "Thesis submitted successfully",
+      });
     }
   }, [state.success])
 
@@ -71,7 +78,7 @@ const SubmitThesisView = ({
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-3xl mx-auto">
       <Card>
         <CardHeader>
           <CardTitle>Submit Thesis</CardTitle>
@@ -146,24 +153,23 @@ const SubmitThesisView = ({
             </div>
 
             <div className="space-y-2 text-sm">
-              <label htmlFor="topics">Topics</label>
+              <label htmlFor="keywords">Keywords</label>
               <MultipleSelector
                 key={state?.success.toString()}
-                name='topics'
-                defaultOptions={topics.map(topic => ({ value: topic, label: topic }))}
-                onChange={(options) => console.log(options)}
+                name='keywords'
+                defaultOptions={keywords.map(keyword => ({ value: keyword, label: keyword }))}
                 creatable
                 hidePlaceholderWhenSelected
-                placeholder="Select topic(s)"
+                placeholder="Select keyword(s)"
                 emptyIndicator={
                   <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                    No topics found. You can write topic name and add.
+                    No keywords found. You can write keyword name and add.
                   </p>
                 }
               />
-              {state?.errors?.topics && (
-                <p id="topics-error" className="text-sm text-red-500">
-                  {state.errors.topics[0]}
+              {state?.errors?.keywords && (
+                <p id="keywords-error" className="text-sm text-red-500">
+                  {state.errors.keywords[0]}
                 </p>
               )}
             </div>
@@ -275,7 +281,39 @@ const SubmitThesisView = ({
               </div>
             </div>
 
-            <Button type="submit" className="w-full">Submit Thesis</Button>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2 text-sm">
+                <label htmlFor="institute_id">Language</label>
+                <Select key={state?.success.toString()} name="language" defaultValue={state?.inputs?.language}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {Object.keys(Language).map((language) => (
+                        <SelectItem key={language} value={language.toString()}>{language}</SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {state?.errors?.language && (
+                  <p id="language-error" className="text-sm text-red-500">
+                    {state.errors.language[0]}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2 text-sm">
+                <label htmlFor="submission_date">Submission Date</label>
+                <Input type='date' name="submission_date" defaultValue={state?.inputs?.submission_date} />
+                {state?.errors?.submission_date && (
+                  <p id="submission_date-error" className="text-sm text-red-500">
+                    {state.errors.submission_date[0]}
+                  </p>
+                )}
+              </div>
+            </div>
+            <Button disabled={isPending} type="submit" className="w-full">{isPending ? <LoadingSpinner /> : "Submit Thesis"}</Button>
           </form>
         </CardContent>
       </Card>
